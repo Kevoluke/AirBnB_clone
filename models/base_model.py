@@ -8,12 +8,31 @@ from datetime import datetime
 class BaseModel:
     """ Class representing BaseModel of Airbnb-clone Project """
 
-    def __init__(self):
-        """ function initializing a new BaseModel """
-        self.id = str(uuid4())
-        self.created_at = datetime.today()
-        self.updated_at = datetime.today()
-        timeform = "%Y-%m-%dT%H:%M:%S.%f"
+    def __init__(self, *args, **kwargs):
+        """Initializes instance attributes
+        Args:
+        - *args: list of arguments
+        - **kwargs: dict of key-values arguments
+        """
+
+
+        if kwargs is not None and kwargs != {}:
+            for key in kwargs:
+                if key == "created_at":
+                    self.__dict__["created_at"] = datetime.strptime(
+                            kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
+                elif key == "updated_at":
+                    self.__dict__["updated_at"] = datetime.strptime(
+                            kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
+                else:
+                    self.__dict__[key] = kwargs[key]
+
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.today()
+            self.updated_at = datetime.today()
+            timeform = "%Y-%m-%dT%H:%M:%S.%f"
+
 
     def save(self):
         """ Updating updated_at with the current datetime """
@@ -29,6 +48,5 @@ class BaseModel:
 
     def __str__(self):
         """ Returns/prints the string representation of BaseModel instance """
-
         clname = self.__class__.__name__
         return "[{}] ({}) {}".format(clname, self.id, self.__dict__)
