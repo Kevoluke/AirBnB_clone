@@ -33,3 +33,6 @@ class TestBaseModel_instantiation(unittest.TestCase):
         self.assertIn("'id': '718293'", mstr)
         self.assertIn("'created_at': " + dt_repr, mstr)
         self.assertIn("'updated_at': " + dt_repr, mstr)
+
+    def test_new_instance_stored_in_objects(self):
+        self.assertIn(BaseModel(), models.storage.all().values())

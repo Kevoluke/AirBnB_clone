@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """ Defines The BaseModel class """
+from datetime import datetime
 import models
 from uuid import uuid4
-from datetime import datetime
 
 
 class BaseModel:
@@ -14,8 +14,10 @@ class BaseModel:
         - *args: list of arguments
         - **kwargs: dict of key-values arguments
         """
-
-
+        self.id = str(uuid4())
+        self.created_at = datetime.today()
+        self.updated_at = datetime.today()
+        timeform = "%Y-%m-%dT%H:%M:%S.%f"
         if kwargs is not None and kwargs != {}:
             for key in kwargs:
                 if key == "created_at":
@@ -26,17 +28,14 @@ class BaseModel:
                             kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
                 else:
                     self.__dict__[key] = kwargs[key]
-
         else:
-            self.id = str(uuid4())
-            self.created_at = datetime.today()
-            self.updated_at = datetime.today()
-            timeform = "%Y-%m-%dT%H:%M:%S.%f"
-
+            models.storage.new(self)
 
     def save(self):
         """ Updating updated_at with the current datetime """
         self.updated_at = datetime.today()
+        models.storage.new(self)
+        models.storage.save()
 
     def to_dict(self):
         """ Returns the dictionary of BaseModel instance """
