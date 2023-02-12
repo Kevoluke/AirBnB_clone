@@ -7,6 +7,12 @@ from models import storage
 import re
 from shlex import split
 import json
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 
 def parse(arg):
@@ -32,6 +38,19 @@ class HBNBCommand(cmd.Cmd):
     """Class for the command interpreter."""
 
     prompt = "(hbnb) "
+    __classes = {
+        "BaseModel",
+        "User",
+        "State",
+        "City",
+        "Place",
+        "Amenity",
+        "Review",
+    }
+
+    def empty_line(self):
+        """ Do nothing when line is empty """
+        pass
 
     def default(self, line):
         """Catch commands if nothing else matches then."""
